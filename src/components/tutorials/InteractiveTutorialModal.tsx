@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { soundManager } from '../../services/audio/soundManager';
 import { IconBook, IconSparkles, ItemIconRenderer } from '../icons/GameIcons';
+import { CURRICULUM_NOTIONS } from '../../engine/pedagogy/curriculum';
 
 interface InteractiveTutorialModalProps {
   tutorialId: string;
@@ -182,7 +183,34 @@ export const InteractiveTutorialModal: React.FC<InteractiveTutorialModalProps> =
   onClose,
   onStartPractice,
 }) => {
-  const tutorial = TUTORIAL_REGISTRY[tutorialId] || TUTORIAL_REGISTRY.tut_cp_complement10;
+  const getTutorialConfig = (id: string): TutorialConfig => {
+    if (TUTORIAL_REGISTRY[id]) {
+      return TUTORIAL_REGISTRY[id];
+    }
+    const notion = CURRICULUM_NOTIONS.find((n) => n.tutorialId === id || `tut_${n.id}` === id || n.id === id.replace('tut_', ''));
+    if (notion) {
+      return {
+        id,
+        notionTitle: notion.title,
+        targetObjective: notion.learningObjectives[0] || notion.subtitle,
+        steps: [
+          {
+            title: `📖 Résumé : ${notion.title}`,
+            explanation: `${notion.subtitle}\n\nProgramme officiel 2026 : ${notion.officialRef}\n\n• Objectifs pédagogiques clés :\n${notion.learningObjectives.map((o) => ` ✔️ ${o}`).join('\n')}`,
+            visualType: 'complement10',
+          },
+          {
+            title: '💡 Méthode & Pièges à Éviter',
+            explanation: `Prérequis : ${notion.prerequisites.join(', ')}\n\n⚠️ Erreurs fréquentes à éviter :\n${notion.commonMisconceptions.map((m) => ` ❌ ${m}`).join('\n')}`,
+            visualType: 'complement10',
+          }
+        ]
+      };
+    }
+    return TUTORIAL_REGISTRY.tut_cp_complement10;
+  };
+
+  const tutorial = getTutorialConfig(tutorialId);
   const [currentStepIdx, setCurrentStepIdx] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [answeredCorrectly, setAnsweredCorrectly] = useState(false);
@@ -224,11 +252,11 @@ export const InteractiveTutorialModal: React.FC<InteractiveTutorialModalProps> =
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto">
-      <div className="relative w-full max-w-2xl rounded-2xl border border-amber-500/30 bg-gradient-to-b from-slate-900 to-indigo-950 p-5 sm:p-6 shadow-2xl shadow-amber-950/40 text-slate-100 animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 sm:p-6 overflow-y-auto">
+      <div className="relative max-h-[80vh] w-full max-w-2xl overflow-y-auto pb-12 rounded-3xl border border-amber-500/30 bg-gradient-to-b from-slate-900 to-indigo-950 p-5 sm:p-6 shadow-2xl shadow-amber-950/40 text-slate-100 animate-in fade-in zoom-in-95 duration-200">
         
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-indigo-900/60 pb-3 mb-4">
+        {/* Sticky Header */}
+        <div className="sticky top-0 bg-slate-900/95 backdrop-blur-md z-10 flex items-center justify-between border-b border-indigo-900/60 pb-3 mb-4">
           <div className="flex items-center gap-2">
             <span className="text-2xl" role="img" aria-label="Grimoire">📖</span>
             <div>

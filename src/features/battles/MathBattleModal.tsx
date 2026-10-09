@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import confetti from 'canvas-confetti';
 import type { PlayerProfile, Quest, Exercise, InventoryItem } from '../../types';
-import { getUniqueExerciseForBattle, updateMastery } from '../../engine/pedagogy/exerciseGenerator';
+import { getExercisesForQuest, updateMastery } from '../../engine/pedagogy/exerciseGenerator';
 import { getNotionById } from '../../engine/pedagogy/curriculum';
 import { soundManager } from '../../services/audio/soundManager';
 import { saveManager } from '../../services/persistence/saveManager';
@@ -70,12 +70,15 @@ export const MathBattleModal: React.FC<MathBattleModalProps> = ({
   const [particleTrigger, setParticleTrigger] = useState<'success' | 'victory' | 'attack' | null>(null);
   const [askedExerciseIds, setAskedExerciseIds] = useState<string[]>([]);
 
-  // Notion and Exercise — Strict Zero Duplicate Guarantee
+  // 3 unique exercises per quest — Strict Zero Duplicate Guarantee
   const activeNotionId = quest.notionIds[0] || 'cp_additions_visuelles';
   const currentNotion = getNotionById(activeNotionId);
-  const exercise: Exercise = useMemo(() => {
-    return getUniqueExerciseForBattle(activeNotionId, askedExerciseIds, exerciseIndex);
-  }, [activeNotionId, askedExerciseIds, exerciseIndex]);
+
+  const questExercises = useMemo(() => {
+    return getExercisesForQuest(quest.id, player.grade);
+  }, [quest.id, player.grade]);
+
+  const exercise: Exercise = questExercises[exerciseIndex] || questExercises[0];
 
   const addCombatLog = (msg: string) => {
     setCombatLog((prev) => [msg, ...prev.slice(0, 4)]);
@@ -128,13 +131,13 @@ export const MathBattleModal: React.FC<MathBattleModalProps> = ({
       soundManager.playAttack();
       setParticleTrigger('success');
 
-      const dmg = 25 + Math.floor(Math.random() * 10);
+      const dmg = 30; // 3 correct answers to defeat 90 HP boss
       const newMonsterHp = Math.max(0, monsterHp - dmg);
       setMonsterHp(newMonsterHp);
       setFeedbackMessage({ text: `Réponse exacte ! Sortilège lancé : ${dmg} dégâts infligés !`, isCorrect: true });
       addCombatLog(`Coup critique ! Tu infliges ${dmg} dégâts à ${boss.name} !`);
 
-      if (newMonsterHp === 0) {
+      if (newMonsterHp === 0 || exerciseIndex >= 2) {
         triggerVictory();
         return;
       }
@@ -595,15 +598,13 @@ export const MathBattleModal: React.FC<MathBattleModalProps> = ({
                     <span>{isShieldActive ? 'Bouclier Actif' : 'Bouclier'}</span>
                   </button>
 
-                  {currentNotion?.tutorialAvailable && (
-                    <button
-                      onClick={() => setShowTutorial(true)}
-                      className="px-2.5 py-1.5 rounded-xl border border-indigo-700/60 bg-indigo-950/40 text-indigo-300 hover:bg-indigo-900/50 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
-                    >
-                      <IconBook className="w-3.5 h-3.5" />
-                      <span>Grimoire Tutoriel</span>
-                    </button>
-                  )}
+                  <button
+                    onClick={() => setShowTutorial(true)}
+                    className="px-2.5 py-1.5 rounded-xl border border-indigo-700/60 bg-indigo-950/40 text-indigo-300 hover:bg-indigo-900/50 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
+                  >
+                    <IconBook className="w-3.5 h-3.5" />
+                    <span>Grimoire Pédagogique</span>
+                  </button>
                 </div>
 
                 <span className="text-[10px] text-slate-400">
@@ -637,9 +638,9 @@ export const MathBattleModal: React.FC<MathBattleModalProps> = ({
       </div>
 
       {/* Tutorial Modal if requested */}
-      {showTutorial && currentNotion?.tutorialId && (
+      {showTutorial && (
         <InteractiveTutorialModal
-          tutorialId={currentNotion.tutorialId}
+          tutorialId={currentNotion?.tutorialId || `tut_${activeNotionId}`}
           onClose={() => setShowTutorial(false)}
         />
       )}
