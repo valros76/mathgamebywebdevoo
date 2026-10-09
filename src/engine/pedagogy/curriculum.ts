@@ -21,7 +21,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Dénombrement jusqu\'à 10'],
     commonMisconceptions: ['Confondre le signe + et le signe =', 'Recommencer à compter à partir de 1 au lieu de surcompter'],
     tutorialAvailable: true,
-    tutorialId: 'tut_cp_complement10'
+    tutorialId: 'tut_cp_additions_visuelles'
   },
   {
     id: 'cp_dizaines_unites',
@@ -39,7 +39,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Compter jusqu\'à 20'],
     commonMisconceptions: ['Inverser chiffre des dizaines et des unités (ex: 21 et 12)'],
     tutorialAvailable: true,
-    tutorialId: 'tut_cp_dizaines'
+    tutorialId: 'tut_cp_dizaines_unites'
   },
   {
     id: 'cp_formes_geometriques',
@@ -57,6 +57,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Repérage dans le plan'],
     commonMisconceptions: ['Penser qu\'un carré orienté en pointe n\'est plus un carré'],
     tutorialAvailable: true,
+    tutorialId: 'tut_cp_formes_geometriques'
   },
 
   // CE1
@@ -76,7 +77,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Addition de nombres inférieurs à 100'],
     commonMisconceptions: ['Confondre 3 × 4 et 3 + 4'],
     tutorialAvailable: true,
-    tutorialId: 'tut_ce1_multiplication'
+    tutorialId: 'tut_ce1_tables_multiplication'
   },
   {
     id: 'ce1_monnaie_euros',
@@ -94,6 +95,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Additions simples'],
     commonMisconceptions: ['Oublier que 1 € = 100 centimes'],
     tutorialAvailable: true,
+    tutorialId: 'tut_ce1_monnaie_euros'
   },
 
   // CE2
@@ -113,6 +115,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Tables de 2, 5 et 10'],
     commonMisconceptions: ['Hésitations sur 7 × 8 = 56 et 6 × 9 = 54'],
     tutorialAvailable: true,
+    tutorialId: 'tut_ce2_tables_avancees'
   },
   {
     id: 'ce2_partage_division',
@@ -130,6 +133,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Tables de multiplication'],
     commonMisconceptions: ['Oublier le reste lors d\'un partage non exact'],
     tutorialAvailable: true,
+    tutorialId: 'tut_ce2_partage_division'
   },
 
   // CM1
@@ -150,7 +154,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Partage équitable et divisions simples'],
     commonMisconceptions: ['Additionner séparément numérateur et dénominateur'],
     tutorialAvailable: true,
-    tutorialId: 'tut_cm1_fractions'
+    tutorialId: 'tut_cm1_fractions_simples'
   },
   {
     id: 'cm1_perimetre_aire',
@@ -168,6 +172,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Mesure de longueurs en cm et m'],
     commonMisconceptions: ['Confondre la formule du périmètre et celle de l\'aire'],
     tutorialAvailable: true,
+    tutorialId: 'tut_cm1_perimetre_aire'
   },
 
   // CM2
@@ -188,6 +193,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Fractions décimales'],
     commonMisconceptions: ['Penser que 3,15 est plus grand que 3,8 parce que 15 > 8'],
     tutorialAvailable: true,
+    tutorialId: 'tut_cm2_nombres_decimaux'
   },
   {
     id: 'cm2_proportionnalite',
@@ -205,6 +211,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Multiplications et divisions'],
     commonMisconceptions: ['Additionner au lieu de multiplier (fausse linéarité additive)'],
     tutorialAvailable: true,
+    tutorialId: 'tut_cm2_proportionnalite'
   },
 
   // --- COLLÈGE (Royaume des Savoirs) ---
@@ -225,6 +232,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Fractions simples et divisions'],
     commonMisconceptions: ['Confondre a/b et b/a'],
     tutorialAvailable: true,
+    tutorialId: 'tut_6e_fractions_quotients'
   },
   {
     id: '6e_symetrie_axiale',
@@ -243,6 +251,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Notion d\'angle droit et de milieu'],
     commonMisconceptions: ['Faire glisser la figure au lieu de la retourner (confusion avec la translation)'],
     tutorialAvailable: true,
+    tutorialId: 'tut_6e_symetrie_axiale'
   },
 
   // 5e
@@ -262,7 +271,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Repérage sur une droite graduée'],
     commonMisconceptions: ['Penser que -8 est supérieur à -2 parce que 8 > 2'],
     tutorialAvailable: true,
-    tutorialId: 'tut_5e_relatifs'
+    tutorialId: 'tut_5e_nombres_relatifs'
   },
   {
     id: '5e_angles_triangles',
@@ -280,6 +289,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Mesure des angles en degrés'],
     commonMisconceptions: ['Oublier que la propriété s\'applique à TOUS les triangles'],
     tutorialAvailable: true,
+    tutorialId: 'tut_5e_angles_triangles'
   },
 
   // 4e
@@ -300,7 +310,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Triangle rectangle, puissances et carrés'],
     commonMisconceptions: ['Appliquer Pythagore à un triangle qui n\'est pas rectangle'],
     tutorialAvailable: true,
-    tutorialId: 'tut_4e_pythagore'
+    tutorialId: 'tut_4e_theoreme_pythagore'
   },
   {
     id: '4e_calcul_litteral_equations',
@@ -318,7 +328,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Calcul littéral et priorités opératoires'],
     commonMisconceptions: ['Oublier de changer le signe en transposant un terme'],
     tutorialAvailable: true,
-    tutorialId: 'tut_4e_equations'
+    tutorialId: 'tut_4e_calcul_litteral_equations'
   },
 
   // 3e
@@ -339,6 +349,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Repérage dans le plan et proportionnalité'],
     commonMisconceptions: ['Confondre image (f(x)) et antécédent (x)'],
     tutorialAvailable: true,
+    tutorialId: 'tut_3e_fonctions_lineaires_affines'
   },
   {
     id: '3e_probabilites',
@@ -356,6 +367,7 @@ export const CURRICULUM_NOTIONS: CurriculumNotion[] = [
     prerequisites: ['Fractions et statistiques simples'],
     commonMisconceptions: ['Penser que les tirages passés influencent le tirage indépendant suivant'],
     tutorialAvailable: true,
+    tutorialId: 'tut_3e_probabilites'
   }
 ];
 

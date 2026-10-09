@@ -23,6 +23,30 @@ const GRADES_CONFIG: GradeConfig[] = [
   { grade: '3e', world: 'college', levels: 4, subtitle: 'Fonctions et probabilités', description: 'Fonctions linéaires/affines, probabilités et Thalès.', themeColor: '#f59e0b', bgGradient: 'from-amber-950 via-purple-950 to-slate-950' },
 ];
 
+export function getNotionIdForQuest(grade: SchoolGrade, q: number): string {
+  switch (grade) {
+    case 'CP':
+      return q % 3 === 0 ? 'cp_formes_geometriques' : q % 2 === 0 ? 'cp_dizaines_unites' : 'cp_additions_visuelles';
+    case 'CE1':
+      return q % 2 === 0 ? 'ce1_monnaie_euros' : 'ce1_tables_multiplication';
+    case 'CE2':
+      return q % 2 === 0 ? 'ce2_partage_division' : 'ce2_tables_avancees';
+    case 'CM1':
+      return q % 2 === 0 ? 'cm1_perimetre_aire' : 'cm1_fractions_simples';
+    case 'CM2':
+      return q % 2 === 0 ? 'cm2_proportionnalite' : 'cm2_nombres_decimaux';
+    case '6e':
+      return q % 2 === 0 ? '6e_symetrie_axiale' : '6e_fractions_quotients';
+    case '5e':
+      return q % 2 === 0 ? '5e_angles_triangles' : '5e_nombres_relatifs';
+    case '4e':
+      return q % 2 === 0 ? '4e_calcul_litteral_equations' : '4e_theoreme_pythagore';
+    case '3e':
+    default:
+      return q % 2 === 0 ? '3e_probabilites' : '3e_fonctions_lineaires_affines';
+  }
+}
+
 export const GAME_ZONES: ZoneData[] = [];
 export const GAME_QUESTS: Quest[] = [];
 
@@ -53,6 +77,7 @@ for (const cfg of GRADES_CONFIG) {
       const questId = `quest_${cfg.grade.toLowerCase()}_l${lvl}_q${q}`;
       const domain = THEME_DOMAINS[(lvl + q) % THEME_DOMAINS.length];
       const isBossQuest = q === 10;
+      const notionId = getNotionIdForQuest(cfg.grade, q);
 
       GAME_QUESTS.push({
         id: questId,
@@ -64,7 +89,7 @@ for (const cfg of GRADES_CONFIG) {
         description: `Mission officielle du programme 2026 pour le niveau ${cfg.grade} — Épreuve #${q} du niveau ${lvl}.`,
         narrativeIntro: `« Aventurier du niveau ${cfg.grade}, prouve ta maîtrise en résolvant cette épreuve arithmétique rigoureuse ! »`,
         narrativeOutro: `L'épreuve #${q} est triomphée avec brio ! Le sceau runique s'illumine.`,
-        notionIds: [`notion_${cfg.grade.toLowerCase()}_${domain}`],
+        notionIds: [notionId],
         requiredLevel: lvl,
         sequenceOrder: (lvl - 1) * 10 + q,
         requiredPreviousQuestId: q > 1 ? `quest_${cfg.grade.toLowerCase()}_l${lvl}_q${q - 1}` : undefined,
