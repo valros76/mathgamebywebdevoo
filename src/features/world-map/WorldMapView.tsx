@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import type { PlayerProfile, ZoneData, Quest, QuestState } from '../../types';
+import confetti from 'canvas-confetti';
+import type { PlayerProfile, ZoneData, Quest, QuestState, SchoolGrade } from '../../types';
 import { GAME_ZONES, GAME_QUESTS } from '../../engine/game/worldData';
 import { soundManager } from '../../services/audio/soundManager';
 import { db } from '../../services/persistence/db';
+import { saveManager } from '../../services/persistence/saveManager';
 import { AvatarRenderer } from '../../components/avatar/AvatarRenderer';
 import {
   IconCompass,
@@ -32,11 +34,18 @@ export const WorldMapView: React.FC<WorldMapViewProps> = ({
   onOpenTutorial,
   onRestartGameNewGamePlus,
 }) => {
-  // Filter zones matching player's current school world (Primaire vs Collège)
-  const currentWorldZones = GAME_ZONES.filter((z) => z.world === player.world);
-  const [selectedZone, setSelectedZone] = useState<ZoneData>(
-    currentWorldZones.find((z) => z.id === player.currentZoneId) || currentWorldZones[0]
-  );
+  // Filter zones matching player's current grade
+  const currentWorldZones = GAME_ZONES.filter((z) => z.grades.includes(player.grade));
+  const [selectedZone, setSelectedZone] = useState<ZoneData>(() => {
+    return currentWorldZones.find((z) => z.id === player.currentZoneId) || currentWorldZones[0];
+  });
+
+  useEffect(() => {
+    const zones = GAME_ZONES.filter((z) => z.grades.includes(player.grade));
+    if (zones.length > 0 && !zones.some((z) => z.id === selectedZone.id)) {
+      setSelectedZone(zones[0]);
+    }
+  }, [player.grade]);
   const [completedQuestIds, setCompletedQuestIds] = useState<Set<string>>(new Set());
 
   // Load quest completion states from IndexedDB
@@ -56,6 +65,31 @@ export const WorldMapView: React.FC<WorldMapViewProps> = ({
   const handleZoneClick = (zone: ZoneData) => {
     soundManager.playClick();
     setSelectedZone(zone);
+  };
+
+  const GRADE_ORDER: SchoolGrade[] = ['CP', 'CE1', 'CE2', 'CM1', 'CM2', '6e', '5e', '4e', '3e'];
+  const currentGradeIdx = GRADE_ORDER.indexOf(player.grade);
+  const nextGrade = currentGradeIdx >= 0 && currentGradeIdx < GRADE_ORDER.length - 1 ? GRADE_ORDER[currentGradeIdx + 1] : null;
+
+  const handleAdvanceGrade = async () => {
+    if (!nextGrade) return;
+    soundManager.playReward();
+    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+
+    const isNextCollege = ['6e', '5e', '4e', '3e'].includes(nextGrade);
+    const updated: PlayerProfile = {
+      ...player,
+      grade: nextGrade,
+      world: isNextCollege ? 'college' : 'primaire',
+      level: player.level + 1,
+      xp: player.xp + 500,
+      gold: player.gold + 200,
+      updatedAt: Date.now(),
+    };
+    await db.profiles.put(updated);
+    saveManager.stageProfile(updated);
+    saveManager.markDirty(true);
+    window.location.reload();
   };
 
   const mapScrollRef = useRef<HTMLDivElement>(null);
@@ -85,7 +119,7 @@ export const WorldMapView: React.FC<WorldMapViewProps> = ({
 
   // Quests belonging to this player's grade across the current world
   const allPlayerGradeQuests = GAME_QUESTS.filter(
-    (q) => q.grade === player.grade || (q.world === player.world && q.sequenceOrder !== undefined)
+    (q) => q.grade === player.grade
   );
   const isAllQuestsCompleted =
     allPlayerGradeQuests.length > 0 &&
@@ -93,7 +127,7 @@ export const WorldMapView: React.FC<WorldMapViewProps> = ({
 
   // Quêtes disponibles pour la zone sélectionnée
   const availableQuestsForZone = GAME_QUESTS.filter(
-    (q) => q.zoneId === selectedZone.id && (q.grade === player.grade || q.world === player.world)
+    (q) => q.zoneId === selectedZone.id && q.grade === player.grade
   );
 
   return (
@@ -155,18 +189,30 @@ export const WorldMapView: React.FC<WorldMapViewProps> = ({
               </div>
             </div>
 
-            {onRestartGameNewGamePlus && (
-              <button
-                onClick={() => {
-                  soundManager.playReward();
-                  onRestartGameNewGamePlus();
-                }}
-                className="w-full sm:w-auto px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-xl shadow-amber-500/30 transition transform hover:scale-105 cursor-pointer flex items-center justify-center gap-2 shrink-0 border border-amber-300"
-              >
-                <IconSparkles className="w-5 h-5 text-slate-950" />
-                <span>Recommencer l'Aventure (New Game+ Prestige)</span>
-              </button>
-            )}
+            <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto">
+              {nextGrade && (
+                <button
+                  onClick={handleAdvanceGrade}
+                  className="w-full sm:w-auto px-5 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-slate-950 font-black text-xs sm:text-sm shadow-xl shadow-emerald-500/30 transition transform hover:scale-105 cursor-pointer flex items-center justify-center gap-2 shrink-0 border border-emerald-300"
+                >
+                  <IconSparkles className="w-5 h-5 text-slate-950" />
+                  <span>Passer en classe supérieure ({nextGrade}) ➔</span>
+                </button>
+              )}
+
+              {onRestartGameNewGamePlus && (
+                <button
+                  onClick={() => {
+                    soundManager.playReward();
+                    onRestartGameNewGamePlus();
+                  }}
+                  className="w-full sm:w-auto px-4 py-3 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-xl shadow-amber-500/30 transition transform hover:scale-105 cursor-pointer flex items-center justify-center gap-2 shrink-0 border border-amber-300"
+                >
+                  <IconSparkles className="w-4 h-4 text-slate-950" />
+                  <span>New Game+ Prestige</span>
+                </button>
+              )}
+            </div>
           </div>
           <p className="text-[11px] text-amber-300/80 mt-3 pt-3 border-t border-amber-500/30 flex items-center gap-1.5">
             <span>✨</span>
