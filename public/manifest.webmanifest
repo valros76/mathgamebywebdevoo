@@ -1,0 +1,40 @@
+{
+  "id": "/",
+  "name": "MathGame par Webdevoo",
+  "short_name": "MathGame",
+  "description": "RPG éducatif d'aventure mathématique pour l'école primaire et le collège français (du CP à la 3e), 100% jouable hors connexion.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#090d16",
+  "theme_color": "#1e1b4b",
+  "lang": "fr",
+  "categories": ["education", "games"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
