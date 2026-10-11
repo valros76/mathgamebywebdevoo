@@ -190,7 +190,7 @@ export function App() {
               {/* Desktop & Mobile Action Buttons */}
               <div className="flex items-center gap-1.5">
                 {/* Desktop Action Buttons */}
-                <div className="hidden md:flex items-center gap-1.5">
+                <div className="hidden xl:flex items-center gap-1.5">
                   <button
                     onClick={() => {
                       soundManager.playClick();
@@ -248,14 +248,14 @@ export function App() {
                   </button>
                 </div>
 
-                {/* Mobile Menu Hamburger Toggle Button */}
+                {/* Mobile / Tablet Menu Hamburger Toggle Button */}
                 <button
                   onClick={() => {
                     soundManager.playClick();
                     setMobileMenuOpen(true);
                   }}
                   title="Ouvrir le menu"
-                  className="flex md:hidden items-center justify-center p-2.5 rounded-xl border border-amber-500/50 bg-amber-950/40 hover:bg-amber-900/50 text-amber-300 cursor-pointer shadow-sm"
+                  className="flex xl:hidden items-center justify-center p-2.5 rounded-xl border border-amber-500/50 bg-amber-950/40 hover:bg-amber-900/50 text-amber-300 cursor-pointer shadow-sm"
                 >
                   <IconMenu className="w-5 h-5 text-amber-300" />
                 </button>
@@ -268,7 +268,7 @@ export function App() {
         </div>
       </header>
 
-      {/* Mobile Menu Slide-Over Drawer */}
+      {/* Mobile / Tablet Menu Slide-Over Drawer */}
       {mobileMenuOpen && activePlayer && (
         <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
           <div className="w-full max-w-xs h-full bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-950 border-l border-amber-500/40 p-5 flex flex-col justify-between shadow-2xl overflow-y-auto">
@@ -354,8 +354,8 @@ export function App() {
               </div>
             </div>
 
-            {/* Drawer Footer / Switch Hero */}
-            <div className="pt-4 border-t border-indigo-900/60">
+            {/* Drawer Footer / Switch Hero & Legal Links */}
+            <div className="pt-4 border-t border-indigo-900/60 space-y-3">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
@@ -366,6 +366,42 @@ export function App() {
                 <IconSwitchHero className="w-4 h-4 text-slate-400" />
                 <span>Changer de Héros</span>
               </button>
+
+              {/* Legal Links inside Tablet/Mobile Drawer */}
+              <div className="pt-2 border-t border-indigo-900/40 text-center text-[11px] text-slate-400 space-y-1.5">
+                <div className="font-medium text-slate-300">MathGame par Webdevoo © 2026</div>
+                <div className="flex items-center justify-center gap-2 flex-wrap">
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setActiveLegalSlug('mentions-legales');
+                    }}
+                    className="hover:text-amber-300 underline underline-offset-2 cursor-pointer"
+                  >
+                    Mentions Légales
+                  </button>
+                  <span>•</span>
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setActiveLegalSlug('conditions-utilisation');
+                    }}
+                    className="hover:text-amber-300 underline underline-offset-2 cursor-pointer"
+                  >
+                    CGU
+                  </button>
+                  <span>•</span>
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setActiveLegalSlug('confidentialite');
+                    }}
+                    className="hover:text-amber-300 underline underline-offset-2 cursor-pointer"
+                  >
+                    Confidentialité
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -384,8 +420,8 @@ export function App() {
         )}
       </main>
 
-      {/* Footer with Legal Links (shrink-0 so viewport height is strictly preserved) */}
-      <footer className="shrink-0 border-t border-indigo-950/90 bg-slate-950 px-3 sm:px-6 py-2 text-center text-[11px] text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-1.5">
+      {/* Footer with Legal Links (hidden on mobile/tablet, visible on desktop lg+) */}
+      <footer className="hidden lg:flex shrink-0 border-t border-indigo-950/90 bg-slate-950 px-3 sm:px-6 py-2 text-center text-[11px] text-slate-500 items-center justify-between gap-1.5">
         <div>
           <span>MathGame par Webdevoo © 2026 — Jeu éducatif indépendant inspiré des repères 2026 (primaire & collège).</span>
         </div>

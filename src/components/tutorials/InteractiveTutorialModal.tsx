@@ -1,4 +1,4 @@
-// MathGame par Webdevoo — Grimoire Tutoriel Interactif & Visuel Pédagogique
+// MathGame par Webdevoo — Grimoire Tutoriel Interactif & Exemples Concrets Résolus
 import React, { useState } from 'react';
 import { soundManager } from '../../services/audio/soundManager';
 import { IconBook, IconSparkles, ItemIconRenderer } from '../icons/GameIcons';
@@ -13,7 +13,7 @@ interface InteractiveTutorialModalProps {
 interface StepData {
   title: string;
   explanation: string;
-  visualType: 'complement10' | 'multiplication' | 'fractions' | 'relatifs' | 'pythagore' | 'perimetre_aire' | 'nombres_decimaux';
+  visualType: 'complement10' | 'multiplication' | 'fractions' | 'relatifs' | 'pythagore' | 'perimetre_aire' | 'nombres_decimaux' | 'proportionnalite' | 'equations' | 'fonctions' | 'probabilites';
   question?: string;
   options?: { label: string; isCorrect: boolean }[];
   feedback?: string;
@@ -27,30 +27,95 @@ interface TutorialConfig {
 }
 
 const TUTORIAL_REGISTRY: Record<string, TutorialConfig> = {
-  tut_cp_complement10: {
-    id: 'tut_cp_complement10',
-    notionTitle: 'Les Compléments à 10',
-    targetObjective: 'Comprendre comment deux quantités s\'assemblent pour former exactement 10.',
+  tut_cm2_proportionnalite: {
+    id: 'tut_cm2_proportionnalite',
+    notionTitle: 'Proportionnalité Simple : Le Grimoire Alchimique',
+    targetObjective: 'Résoudre un problème de proportionnalité par le passage par l\'unité ou le coefficient.',
     steps: [
       {
-        title: 'Étape 1 : Le Talisman des 10 Réceptacles',
-        explanation: 'Ce talisman sacré possède 10 emplacements magiques disposés en deux rangées de 5.',
-        visualType: 'complement10',
+        title: 'Étape 1 : Trouver le prix d\'une seule unité (Passer par l\'unité)',
+        explanation: 'Exemple concret : Si 2 fioles magiques coûtent 6 pièces d\'or, combien coûtent 5 fioles ?\n\n1. On calcule d\'abord le prix d\'UNE seule fiole :\n   6 pièces ÷ 2 fioles = 3 pièces par fiole.\n\n2. On multiplie ce prix unitaire par la nouvelle quantité (5 fioles) :\n   5 fioles × 3 pièces = 15 pièces d\'or.',
+        visualType: 'proportionnalite',
       },
       {
-        title: 'Étape 2 : Placer 7 Cristaux Rouges',
-        explanation: 'Nous remplissons 7 réceptacles avec des cristaux de rubis (5 en haut et 2 en bas). Combien de cases restent vides ?',
-        visualType: 'complement10',
-        question: 'Combien de cristaux saphirs bleus faut-il ajouter pour que le talisman soit plein ?',
-        options: [
-          { label: '2 cristaux', isCorrect: false },
-          { label: '3 cristaux', isCorrect: true },
-          { label: '4 cristaux', isCorrect: false },
-        ],
-        feedback: 'Bravo ! 7 + 3 = 10. Les 3 cases vides sont complétées par les cristaux bleus.',
-      },
-    ],
+        title: 'Étape 2 : Règle d\'Or & Pièges à éviter',
+        explanation: '• Règle d\'Or : Dans une situation proportionnelle, on multiplie ou on divise par le même nombre partout.\n\n❌ Piège fréquent : Ne jamais faire une addition additive (dire que si 2 fioles coûtent 6 et qu\'on en veut 5, on ajoute +3 car 2+3=5, c\'est faux ! On multiplie par le coefficient ou on passe par l\'unité).',
+        visualType: 'proportionnalite',
+      }
+    ]
   },
+
+  tut_cm2_nombres_decimaux: {
+    id: 'tut_cm2_nombres_decimaux',
+    notionTitle: 'Addition et Calcul avec les Nombres Décimaux',
+    targetObjective: 'Maîtriser l\'addition de nombres à virgule par un alignement rigoureux.',
+    steps: [
+      {
+        title: 'Étape 1 : L\'Alignement des Virgules',
+        explanation: 'Exemple concret : Calculer 14,6 + 7,45\n\n1. On aligne les virgules verticalement en complétant par un zéro si nécessaire :\n     1 4 , 6 0\n   +  7 , 4 5\n   ------------\n\n2. On additionne de droite à gauche :\n   • Centièmes : 0 + 5 = 5\n   • Dixièmes : 6 + 4 = 10 (on pose 0, retient 1)\n   • Unitės : 4 + 7 + 1 (retenue) = 12 (pose 2, retient 1)\n   • Dizaines : 1 + 1 (retenue) = 2\n\nRésultat : 22,05',
+        visualType: 'nombres_decimaux',
+      },
+      {
+        title: 'Étape 2 : Règle d\'Or & Pièges à éviter',
+        explanation: '❌ Erreur fréquente : Oublier d\'aligner les virgules ou additionner la partie entière avec la partie décimale directement (ex: écrire 14,6 + 7,45 = 14,105). La virgule reste toujours bien alignée dans la colonne.',
+        visualType: 'nombres_decimaux',
+      }
+    ]
+  },
+
+  tut_cm1_perimetre_aire: {
+    id: 'tut_cm1_perimetre_aire',
+    notionTitle: 'Périmètre et Aire du Rectangle',
+    targetObjective: 'Distinguer le contour (périmètre) et la surface intérieure (aire).',
+    steps: [
+      {
+        title: 'Étape 1 : Calculer le Périmètre (Le Tour)',
+        explanation: 'Exemple concret : Un rectangle de Longueur L = 6 cm et de largeur l = 3 cm.\n\n• Le Périmètre est la longueur totale du contour :\n  Périmètre = (Longueur + largeur) × 2\n  Périmètre = (6 + 3) × 2 = 9 × 2 = 18 cm.',
+        visualType: 'perimetre_aire',
+      },
+      {
+        title: 'Étape 2 : Calculer l\'Aire (La Surface)',
+        explanation: '• L\'Aire est la surface occupée à l\'intérieur :\n  Aire = Longueur × largeur\n  Aire = 6 cm × 3 cm = 18 cm² (en cm carrés).\n\n❌ Piège fréquent : Confondre les unités (le périmètre est en cm, l\'aire est en cm²).',
+        visualType: 'perimetre_aire',
+      }
+    ]
+  },
+
+  tut_cm1_fractions_simples: {
+    id: 'tut_cm1_fractions_simples',
+    notionTitle: 'Fractions Simples : Prendre une Fraction d\'une Quantité',
+    targetObjective: 'Calculer la valeur d\'une fraction d\'un nombre entier.',
+    steps: [
+      {
+        title: 'Étape 1 : Diviser par le dénominateur, multiplier par le numérateur',
+        explanation: 'Exemple concret : Quelle est la valeur de 3/4 d\'un trésor de 20 cristaux ?\n\n1. Le dénominateur est 4 : on divise le total par 4 :\n   20 cristaux ÷ 4 = 5 cristaux (ce qui représente 1 quart).\n\n2. Le numérateur est 3 : on prend 3 parts :\n   5 cristaux × 3 = 15 cristaux.\n\nRésultat : 3/4 de 20 vaut 15 cristaux.',
+        visualType: 'fractions',
+      },
+      {
+        title: 'Étape 2 : Règle d\'Or & Pièges',
+        explanation: '• Numérateur (en haut) : ce qu\'on prend.\n• Dénominateur (en bas) : le nombre total de parts égales dans lesquelles on découpe l\'unité.',
+        visualType: 'fractions',
+      }
+    ]
+  },
+
+  tut_4e_theoreme_pythagore: {
+    id: 'tut_4e_theoreme_pythagore',
+    notionTitle: 'Le Théorème de Pythagore',
+    targetObjective: 'Calculer la longueur de l\'hypoténuse dans un triangle rectangle.',
+    steps: [
+      {
+        title: 'Étape 1 : La Formule Sacrée c² = a² + b²',
+        explanation: 'Exemple concret : Un triangle rectangle a des côtés de l\'angle droit a = 3 et b = 4.\n\n1. On applique le théorème de Pythagore :\n   c² = a² + b²\n   c² = 3² + 4²\n   c² = 9 + 16 = 25.\n\n2. On prend la racine carrée pour trouver c :\n   c = √25 = 5 mètres.',
+        visualType: 'pythagore',
+      },
+      {
+        title: 'Étape 2 : Règle d\'Or & Pièges',
+        explanation: '❌ Piège fréquent : N\'oublie jamais que ce théorème ne s\'applique QUE dans un triangle rectangle !',
+        visualType: 'pythagore',
+      }
+    ]
+  }
 };
 
 export const InteractiveTutorialModal: React.FC<InteractiveTutorialModalProps> = ({
@@ -69,6 +134,10 @@ export const InteractiveTutorialModal: React.FC<InteractiveTutorialModalProps> =
     if (id.includes('pythagore')) return 'pythagore';
     if (id.includes('perimetre') || id.includes('aire')) return 'perimetre_aire';
     if (id.includes('decimaux') || id.includes('calcul')) return 'nombres_decimaux';
+    if (id.includes('proportionnalite')) return 'proportionnalite';
+    if (id.includes('equation')) return 'equations';
+    if (id.includes('fonction')) return 'fonctions';
+    if (id.includes('probabilite')) return 'probabilites';
     return 'complement10';
   };
 
@@ -86,13 +155,13 @@ export const InteractiveTutorialModal: React.FC<InteractiveTutorialModalProps> =
         targetObjective: notion.learningObjectives[0] || notion.subtitle,
         steps: [
           {
-            title: `📖 Résumé : ${notion.title}`,
-            explanation: `${notion.subtitle}\n\nProgramme officiel 2026 : ${notion.officialRef}\n\n• Objectifs pédagogiques :\n${notion.learningObjectives.map((o) => ` ✔️ ${o}`).join('\n')}`,
+            title: `📖 Exemple Concret & Méthode : ${notion.title}`,
+            explanation: `${notion.subtitle}\n\nProgramme officiel 2026 : ${notion.officialRef}\n\n• Objectifs pédagogiques clés :\n${notion.learningObjectives.map((o) => ` ✔️ ${o}`).join('\n')}\n\n💡 Exemple résolu type :\nPour réussir ce type d'exercice, identifie bien les données de l'énoncé, pose ton calcul par étapes (comme vu dans ton cours) et vérifie la cohérence du résultat.`,
             visualType: vType,
           },
           {
-            title: '💡 Méthode & Règle d\'Or',
-            explanation: `Prérequis : ${notion.prerequisites.join(', ')}\n\n⚠️ Erreurs fréquentes à éviter :\n${notion.commonMisconceptions.map((m) => ` ❌ ${m}`).join('\n')}`,
+            title: '💡 Règle d\'Or & Pièges à Éviter',
+            explanation: `Prérequis indispensables : ${notion.prerequisites.join(', ')}\n\n⚠️ Erreurs fréquentes à éviter :\n${notion.commonMisconceptions.map((m) => ` ❌ ${m}`).join('\n')}`,
             visualType: vType,
           }
         ]
@@ -105,8 +174,8 @@ export const InteractiveTutorialModal: React.FC<InteractiveTutorialModalProps> =
       targetObjective: 'Maîtriser les concepts fondamentaux du programme officiel 2026.',
       steps: [
         {
-          title: 'Résumé de la notion',
-          explanation: 'Examine attentivement l’énoncé de l’exercice, décompose les données et applique la règle mathématique correspondante pas à pas.',
+          title: 'Exemple concret et méthode',
+          explanation: 'Examine attentivement l’énoncé, décompose les données numériques et applique la formule étape par étape.',
           visualType: 'complement10',
         },
       ],
@@ -185,85 +254,71 @@ export const InteractiveTutorialModal: React.FC<InteractiveTutorialModalProps> =
         </div>
 
         {/* Visual Illustration Box matching Notion */}
-        <div className="mb-4 rounded-xl border border-indigo-800/60 bg-slate-950/70 p-4 min-h-[150px] flex flex-col items-center justify-center">
-          {step.visualType === 'complement10' && (
+        <div className="mb-4 rounded-xl border border-indigo-800/60 bg-slate-950/70 p-4 min-h-[140px] flex flex-col items-center justify-center">
+          {step.visualType === 'proportionnalite' && (
             <div className="w-full max-w-md text-center">
-              <p className="text-xs text-slate-400 mb-2">Illustration : Décomposition additive et complément</p>
-              <div className="grid grid-cols-5 gap-2 bg-slate-900/80 p-3 rounded-lg border border-indigo-700/40">
-                {[...Array(10)].map((_, i) => (
-                  <div
-                    key={i}
-                    className={`h-9 rounded-md border flex items-center justify-center text-sm ${
-                      i < 7 ? 'border-red-500/60 bg-red-950/40 text-red-400' : 'border-cyan-500/60 bg-cyan-950/40 text-cyan-300'
-                    }`}
-                  >
-                    {i < 7 ? '💎' : '✨'}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {step.visualType === 'multiplication' && (
-            <div className="w-full max-w-md text-center">
-              <p className="text-xs text-slate-400 mb-2">Illustration : Groupement rectangulaire (multiplication)</p>
-              <div className="flex flex-col gap-2 bg-slate-900/80 p-3 rounded-lg border border-indigo-700/40 font-mono text-xs text-amber-300">
-                <span>🧪🧪🧪🧪 (4 par rangée)</span>
-                <span>🧪🧪🧪🧪 (× 3 rangées)</span>
-                <span className="text-cyan-300 font-bold">= 12 au total</span>
-              </div>
-            </div>
-          )}
-
-          {step.visualType === 'fractions' && (
-            <div className="w-full max-w-md text-center">
-              <p className="text-xs text-slate-400 mb-2">Illustration : Partage de l'unité en parts égales (Fractions)</p>
-              <div className="flex h-10 w-full rounded-lg overflow-hidden border-2 border-indigo-500 shadow-md">
-                <div className="w-1/4 bg-blue-500 flex items-center justify-center font-bold text-xs text-white">Part</div>
-                <div className="w-1/4 bg-blue-500 flex items-center justify-center font-bold text-xs text-white">Part</div>
-                <div className="w-1/4 bg-blue-500 flex items-center justify-center font-bold text-xs text-white">Part</div>
-                <div className="w-1/4 bg-slate-800 flex items-center justify-center font-bold text-xs text-slate-400">Reste</div>
-              </div>
-            </div>
-          )}
-
-          {step.visualType === 'perimetre_aire' && (
-            <div className="w-full max-w-md text-center">
-              <p className="text-xs text-slate-400 mb-2">Illustration : Contour (Périmètre) vs Surface (Aire)</p>
-              <div className="p-3 bg-slate-900/95 rounded-xl border border-indigo-700/50 font-mono text-xs text-amber-300 space-y-1">
-                <div>📏 Périmètre = Somme des 4 côtés</div>
-                <div>🟩 Aire = Longueur × Largeur</div>
+              <p className="text-xs text-slate-400 mb-2">Exemple concret résolu : Passage par l'unité</p>
+              <div className="p-3 bg-slate-900/95 rounded-xl border border-amber-700/50 font-mono text-xs text-amber-300 space-y-1">
+                <div>2 fioles ➔ 6 pièces d'or</div>
+                <div>1 fiole ➔ 3 pièces (6 ÷ 2)</div>
+                <div className="text-emerald-300 font-bold">5 fioles ➔ 15 pièces (5 × 3)</div>
               </div>
             </div>
           )}
 
           {step.visualType === 'nombres_decimaux' && (
             <div className="w-full max-w-md text-center">
-              <p className="text-xs text-slate-400 mb-2">Illustration : Alignement des virgules pour le calcul</p>
+              <p className="text-xs text-slate-400 mb-2">Exemple concret résolu : Addition posée</p>
               <div className="p-3 bg-slate-900/95 rounded-xl border border-cyan-700/50 font-mono text-xs text-cyan-300 space-y-0.5">
-                <div>Partie Entière , Partie Décimale</div>
-                <div className="text-amber-300 font-bold">14 , 60</div>
-                <div className="text-amber-300 font-bold">+ 7 , 45</div>
-                <div className="border-t border-cyan-700 my-1" />
-                <div className="text-emerald-300 font-bold">= 22 , 05</div>
+                <div className="text-amber-300 font-bold">14,60 + 7,45 = 22,05</div>
+                <div>Alignement strict des virgules</div>
+              </div>
+            </div>
+          )}
+
+          {step.visualType === 'perimetre_aire' && (
+            <div className="w-full max-w-md text-center">
+              <p className="text-xs text-slate-400 mb-2">Exemple concret résolu : Périmètre & Aire</p>
+              <div className="p-3 bg-slate-900/95 rounded-xl border border-indigo-700/50 font-mono text-xs text-amber-300 space-y-1">
+                <div>L = 6cm, l = 3cm</div>
+                <div>Périmètre = (6 + 3) × 2 = 18 cm</div>
+                <div>Aire = 6 × 3 = 18 cm²</div>
+              </div>
+            </div>
+          )}
+
+          {step.visualType === 'fractions' && (
+            <div className="w-full max-w-md text-center">
+              <p className="text-xs text-slate-400 mb-2">Exemple concret résolu : Fraction d'une quantité</p>
+              <div className="p-3 bg-slate-900/95 rounded-xl border border-blue-700/50 font-mono text-xs text-blue-300">
+                3/4 de 20 ➔ 20 ÷ 4 = 5, puis 5 × 3 = 15
               </div>
             </div>
           )}
 
           {step.visualType === 'pythagore' && (
             <div className="w-full max-w-md text-center">
-              <p className="text-xs text-slate-400 mb-2">Illustration : Théorème de Pythagore (a² + b² = c²)</p>
+              <p className="text-xs text-slate-400 mb-2">Exemple concret résolu : Théorème de Pythagore</p>
               <div className="p-3 bg-slate-900/95 rounded-xl border border-purple-700/50 font-mono text-xs text-purple-300">
-                c² = a² + b² ➔ c = √(a² + b²)
+                c² = 3² + 4² = 9 + 16 = 25 ➔ c = 5
               </div>
             </div>
           )}
 
-          {step.visualType === 'relatifs' && (
+          {step.visualType === 'multiplication' && (
             <div className="w-full max-w-md text-center">
-              <p className="text-xs text-slate-400 mb-2">Illustration : Axe vertical des relatifs</p>
-              <div className="p-3 bg-slate-900/95 rounded-xl border border-blue-700/50 font-mono text-xs text-cyan-300">
-                + Altitudes / 0 Surface / - Catacombes
+              <p className="text-xs text-slate-400 mb-2">Exemple concret résolu : Multiplication</p>
+              <div className="p-3 bg-slate-900/95 rounded-xl border border-green-700/50 font-mono text-xs text-green-300">
+                3 rangées de 4 ➔ 3 × 4 = 12
+              </div>
+            </div>
+          )}
+
+          {step.visualType === 'complement10' && (
+            <div className="w-full max-w-md text-center">
+              <p className="text-xs text-slate-400 mb-2">Exemple concret résolu : Complément à 10</p>
+              <div className="p-3 bg-slate-900/95 rounded-xl border border-red-700/50 font-mono text-xs text-red-300">
+                6 + ? = 10 ➔ Il manque 4
               </div>
             </div>
           )}
@@ -274,38 +329,6 @@ export const InteractiveTutorialModal: React.FC<InteractiveTutorialModalProps> =
           <h3 className="text-base font-semibold text-amber-200 mb-1">{step.title}</h3>
           <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line">{step.explanation}</p>
         </div>
-
-        {/* Interactive question if present */}
-        {step.question && step.options && (
-          <div className="mb-5 rounded-xl bg-indigo-950/40 border border-indigo-800/60 p-4">
-            <p className="text-xs font-semibold text-amber-300 mb-3">{step.question}</p>
-            <div className="space-y-2">
-              {step.options.map((opt, idx) => {
-                const isSelected = selectedOption === idx;
-                return (
-                  <button
-                    key={idx}
-                    onClick={() => handleSelectOption(idx, opt.isCorrect)}
-                    className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-medium transition border cursor-pointer ${
-                      isSelected
-                        ? opt.isCorrect
-                          ? 'bg-emerald-950/80 border-emerald-500 text-emerald-200 shadow'
-                          : 'bg-red-950/80 border-red-500 text-red-200 shadow'
-                        : 'bg-slate-900/80 border-slate-700 text-slate-200 hover:border-amber-400'
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                );
-              })}
-            </div>
-            {selectedOption !== null && (
-              <p className={`mt-2 text-xs font-medium ${answeredCorrectly ? 'text-emerald-400' : 'text-amber-300'}`}>
-                {answeredCorrectly ? step.feedback || 'Bonne réponse !' : 'Réessaie ou relis l\'explication ci-dessus.'}
-              </p>
-            )}
-          </div>
-        )}
 
         {/* Navigation buttons */}
         <div className="flex items-center justify-between pt-3 border-t border-indigo-900/60">
